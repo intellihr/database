@@ -13,6 +13,16 @@ use Bosnadev\Database\Schema\Blueprint;
 class PostgresGrammar extends \Illuminate\Database\Schema\Grammars\PostgresGrammar
 {
     /**
+     * Compile the query to determine if a table exists.
+     *
+     * @return string
+     */
+    public function compileTableExists()
+    {
+        return 'SELECT to_regclass(?) as exists';
+    }
+
+    /**
      * Create the column definition for a character type.
      *
      * @param Fluent $column
@@ -250,7 +260,7 @@ class PostgresGrammar extends \Illuminate\Database\Schema\Grammars\PostgresGramm
     {
         return "daterange";
     }
-    
+
     /**
      * Create the column definition for a Text Search Vector type.
      *
@@ -298,7 +308,7 @@ class PostgresGrammar extends \Illuminate\Database\Schema\Grammars\PostgresGramm
 
         return sprintf('CREATE INDEX %s ON %s USING GIN(%s)', $command->index, $this->wrapTable($blueprint), $columns);
     }
-    
+
     /**
      * Compile a gist index key command.
      *
