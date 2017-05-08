@@ -21,4 +21,21 @@ class Builder extends \Illuminate\Database\Schema\PostgresBuilder
     {
         return new Blueprint($table, $callback);
     }
+
+    /**
+     * Determine if the given table exists.
+     *
+     * @param  string  $table
+     * @return bool
+     */
+    public function hasTable($table)
+    {
+        $sql = $this->grammar->compileTableExists();
+
+        $table = $this->connection->getTablePrefix().$table;
+
+        $result = $this->connection->selectOne($sql, [$table]);
+
+        return $result->exists !== null;
+    }
 }
